@@ -3020,7 +3020,14 @@ impl ImportExportBlocks for Client {
                 Err(e) => {
                     return Err(format!("Cannot import block #{}: {:?}", number, e));
                 }
-                Ok(_) => {}
+                Ok(_) => {
+                    if number == 1 {
+                        warn!("First block now {:?}", Instant::now());
+                    }
+                    if number == 2 {
+                        warn!("Second block now {:?}", Instant::now());
+                    }
+                }
             }
             Ok(())
         };
@@ -3070,6 +3077,7 @@ impl ImportExportBlocks for Client {
             }
         };
         self.flush_queue();
+        warn!("Flushing {:?}", Instant::now());
         Ok(())
     }
 }

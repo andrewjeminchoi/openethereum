@@ -78,14 +78,14 @@ impl<M: Machine> Engine<M> for InstantSeal<M> {
 
     fn generate_seal(&self, block: &ExecutedBlock, _parent: &Header) -> Seal {
         // let mut txc = 0;
-        if self.txc.load(Ordering::SeqCst) < 35 || block.transactions.len() >= 130 {
+        if self.txc.load(Ordering::SeqCst) < 20 || block.transactions.len() >= 150 {
         // if block.transactions.len() >= 5 || (!block.transactions.is_empty() && self.txc.load(Ordering::SeqCst) < 5) {
         // if !block.transactions.is_empty() {
             if !block.transactions.is_empty() {
                 self.txc.fetch_add(1, Ordering::SeqCst);
-                warn!(target: "own_tx", "txc {}", self.txc.load(Ordering::SeqCst));
+                // warn!(target: "own_tx", "txc {}", self.txc.load(Ordering::SeqCst));
             }
-            warn!(target: "own_tx", "tx_len {}", block.transactions.len());
+            warn!(target: "own_tx", "tx_len {} txc {}", block.transactions.len(), self.txc.load(Ordering::SeqCst));
             let block_number = block.header.number();
             let last_sealed_block = self.last_sealed_block.load(Ordering::SeqCst);
             // Return a regular seal if the given block is _higher_ than
